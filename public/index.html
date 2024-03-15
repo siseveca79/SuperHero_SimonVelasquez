@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superhéroe</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <!-- Agrega la referencia a jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Agrega la referencia a CanvasJS -->
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</head>
+<body>
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">
+    <img src="./assets/img/favicon.ico" width="30" height="30" class="d-inline-block align-top" alt="">
+    SuperHero
+  </a>
+</nav>
+
+
+<div class="container mt-4">
+
+  
+  <section>
+    <div class="text-center">
+      <img src="./assets/img/sh2.jpg" alt="Superhero Image" style="width: 200px;">
+      <div class="d-flex flex-column align-items-center">
+        <h1 class="mt-4">Encuentra tu Superhéroe</h1>
+        <h3 class="text-muted">Ingresa el número del SuperHero a buscar</h3>
+        <form id="searchForm">
+          <div class="form-group">
+            <input type="text" class="form-control" id="heroId" name="heroId" placeholder="ID del Superhéroe">
+          </div>
+          <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+
+
+  
+  <section class="mt-4">
+    <div class="row">
+      <div class="col-md-6">
+        <div id="heroInfo"></div>
+      </div>
+      <div class="col-md-6">
+        <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+<script>
+  $(document).ready(function() {
+    // Función para manejar el evento submit del formulario
+    $('#searchForm').submit(function(event) {
+      // Prevenir el comportamiento por defecto del formulario
+      event.preventDefault();
+
+      // Obtener el ID del superhéroe del campo de entrada
+      var heroId = $('#heroId').val();
+
+      // Validar si el ID del superhéroe es un número entero
+      if (!Number.isInteger(Number(heroId))) {
+        alert('Por favor, ingresa un número entero válido como ID del superhéroe.');
+        return; // Detener la ejecución si el ID no es válido
+      }
+
+      // Realizar la solicitud al servidor backend
+      $.ajax({
+        url: '/search/' + heroId, // Ruta en tu servidor backend para manejar la búsqueda del superhéroe
+        method: 'GET',
+        success: function(response) {
+          // Mostrar la información del superhéroe
+          displayHeroInfo(response);
+        },
+        error: function(xhr, status, error) {
+          // Mostrar un mensaje de error
+          console.error('Error al buscar el superhéroe:', error);
+          alert('Error al buscar el superhéroe. Por favor, inténtalo de nuevo.');
+        }
+      });
+    });
+
+    // Función para mostrar la información del superhéroe
+    function displayHeroInfo(hero) {
+      // Construir el contenido HTML con la información del superhéroe
+      var heroInfo = `
+      <div class="card">
+          <div class="card-body">
+              <h5 class="card-title">${hero.name}</h5>
+              <img src="${hero.image.url}" class="img-fluid mb-3" alt="${hero.name}">
+              <p class="card-text">Inteligencia: ${hero.powerstats.intelligence}</p>
+              <p class="card-text">Fuerza: ${hero.powerstats.strength}</p>
+              <p class="card-text">Velocidad: ${hero.powerstats.speed}</p>
+              <p class="card-text">Durabilidad: ${hero.powerstats.durability}</p>
+              <p class="card-text">Poder: ${hero.powerstats.power}</p>
+              <p class="card-text">Combate: ${hero.powerstats.combat}</p>
+          </div>
+      </div>
+      `;
+
+      // Insertar el contenido HTML en el elemento #heroInfo
+      $('#heroInfo').html(heroInfo);
+
+      // Crear un gráfico de CanvasJS con las estadísticas del superhéroe
+      var chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+        title: {
+          text: "Estadísticas del Superhéroe"
+        },
+        data: [{
+          type: "pie",
+          startAngle: 240,
+          yValueFormatString: "##0.00'%'",
+          indexLabel: "{label} {y}",
+          dataPoints: [
+            { y: parseInt(hero.powerstats.intelligence), label: "Inteligencia" },
+            { y: parseInt(hero.powerstats.strength), label: "Fuerza" },
+            { y: parseInt(hero.powerstats.speed), label: "Velocidad" },
+            { y: parseInt(hero.powerstats.durability), label: "Durabilidad" },
+            { y: parseInt(hero.powerstats.power), label: "Poder" },
+            { y: parseInt(hero.powerstats.combat), label: "Combate" }
+          ]
+        }]
+      });
+
+      // Renderizar el gráfico
+      chart.render();
+    }
+  });
+</script>
+
+</body>
+</html>
