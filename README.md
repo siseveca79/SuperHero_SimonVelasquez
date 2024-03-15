@@ -1,8 +1,17 @@
 # SuperHero_SimonVelasquez
 Para evaluacion
+# https://github.com/siseveca79/SuperHero_SimonVelasquez
+
+# Descargar
+1. Clonar con el comando: git clone https://github.com/siseveca79/SuperHero_SimonVelasquez.git
+2. code .
+3. Ya en visual estudio code, siempre debes estar en la carpeta donde esta server.js : SuperHero_SimonVelasquez>
 
 
-Paso para que funcione :
+
+
+
+# Paso para que funcione :
 
 1. npm init -y
 2. npm install express
