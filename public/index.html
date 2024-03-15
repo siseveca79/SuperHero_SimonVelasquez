@@ -83,7 +83,7 @@
       <div class="col-md-6">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Estadísticas del Superhéroe</h5>
+            
             <div id="chartContainer" style="height: 300px;"></div>
             <div id="legendContainer" class="mt-3"></div>
           </div>
@@ -92,22 +92,6 @@
     </div>
   </section>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -182,7 +166,9 @@
       // Crear un gráfico de CanvasJS con las estadísticas del superhéroe
       var chart = new CanvasJS.Chart("chartContainer", {
         animationEnabled: true,
-        
+        title: {
+          text: "Estadísticas del Superhéroe"
+        },
         data: [{
           type: "pie",
           startAngle: 240,
